@@ -10,28 +10,28 @@ namespace str{
 inline bool leq(int a1,int a2,int b1,int b2){return a1<b1||(a1==b1&&a2<b2);}
 inline bool leq(int a1,int a2,int a3,int b1,int b2,int b3){return a1<b1||(a1==b1&&leq(a2,a3,b2,b3));}
 
-static void radixPass(int a[],int b[],int r[],const int &n,const int &K){
-    int *c=new int[K+1];
+static void radixPass(vector<int>&a,vector<int>&b,vector<int>&r,const int &n,const int &K){
+    vector<int>c(K+1);
     int i,sum,tmp;
     for(i=0;i<=K;i++)c[i]=0;
     for(i=0;i<n;i++)c[r[a[i]]]++;
     for(i=0,sum=0;i<=K;i++){tmp=c[i];c[i]=sum;sum+=tmp;}
     for(i=0;i<n;i++)b[c[r[a[i]]]++]=a[i];
-    delete [] c;
 }
 
-void suffixArray(int T[],int SA[],const int &n,const int &K){
+void suffixArray(vector<int>&T,vector<int>&SA,const int &n,const int &K){
     const int n0=(n+2)/3,n1=(n+1)/3,n2=n/3,n02=n0+n2;
-    int *R=new int[n02+3]; R[n02]=R[n02+1]=R[n02+2]=0;
-    int *SA12=new int[n02+3]; SA12[n02]=SA12[n02+1]=SA12[n02+2]=0;
-    int *R0=new int[n0];
-    int *SA0=new int[n0];
+    vector<int>R(n02+3);R[n02]=R[n02+1]=R[n02+2]=0;
+    vector<int>SA12(n02+3);SA12[n02]=SA12[n02+1]=SA12[n02+2]=0;
+    vector<int>R0(n0);
+    vector<int>SA0(n0);
     int i,j,p,t,k;
 
     for(i=0,j=0;i<n+n0-n1;i++){if(i%3){R[j++]=i;}}
     
-    radixPass(R,SA12,T+2,n02,K);
-    radixPass(SA12,R,T+1,n02,K);
+    vector<int>T2(T.begin()+2,T.end()),T1(T.begin()+1,T.end());
+    radixPass(R,SA12,T2,n02,K);
+    radixPass(SA12,R,T1,n02,K);
     radixPass(R,SA12,T,n02,K);
     
     int name=0,c0=-1,c1=-1,c2=-1;
@@ -65,17 +65,13 @@ void suffixArray(int T[],int SA[],const int &n,const int &K){
             }
         }
     }
-    delete []R;
-    delete []SA12;
-    delete []SA0;
-    delete []R0;
 }
 
 vector<int>SA(string &T){
     const int n=(int)T.size()+3;
-    int *tmp=new int[n+3]; tmp[0]=tmp[1]=tmp[2]=0;
-    vector<int>SA(n-3);
-    int *garSA=new int[n+3];
+    const int m=n+n/3;
+    vector<int>tmp(m),SA(n-3),garSA(m);
+    tmp[0]=tmp[1]=tmp[2]=0;
     int i;
     
     /*
@@ -98,8 +94,6 @@ vector<int>SA(string &T){
     
     for(i=3;i<n;i++)SA[i-3]=garSA[i]-2;
     
-    delete []tmp;
-    delete []garSA;
     return SA;
 }
 
@@ -118,5 +112,3 @@ vector<int>LCPA(string &T,vector<int>&SA){
     return lcpA;
 }
 }
-
-
