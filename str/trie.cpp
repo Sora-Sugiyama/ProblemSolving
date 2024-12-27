@@ -70,7 +70,16 @@ public:
         next.resize(MAX+3);
         eos.resize(MAX+3);
     }
-    
+
+    void clear(){
+        MAX=SIZE=0;
+        ready2match=false;
+        memset(M,0,sizeof(M));
+        T.clear();      T.resize(3);
+        next.clear();   next.resize(3);
+        eos.clear();    eos.resize(3);
+    }
+
     void insert(string &s){
         ready2match=false;
         int p=0;
