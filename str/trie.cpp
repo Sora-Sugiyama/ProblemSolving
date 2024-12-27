@@ -79,8 +79,16 @@ public:
         next.clear();   next.resize(3);
         eos.clear();    eos.resize(3);
     }
-
-    void insert(string &s){
+    
+    inline int size(){
+        return SIZE;
+    }
+    
+    inline bool empty(){
+        return SIZE==0;
+    }
+    
+    void insert(string s){
         ready2match=false;
         int p=0;
         for(char &c:s){
@@ -97,7 +105,7 @@ public:
         eos[p]++;
     }
     
-    int ahoCorasic(string &s){
+    int ahoCorasic(string s){
         if(!ready2match){
             ready2match=true;
             bfs_AhoCorasic();
@@ -111,7 +119,7 @@ public:
         return ret;
     }
 
-    bool in(string &s){
+    bool in(string s){
         int p=0;
         for(char &c:s){
             if(!M[p][mp[c]])return false;
@@ -121,4 +129,3 @@ public:
     }
 };
 }
-
