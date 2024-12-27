@@ -15,8 +15,7 @@ class trie{
     vector<vector<node> >T;
     vector<int>eos,next,mp;
     int M[500003][4];
-    size_t MAX;
-    int SIZE;
+    int MAX,SIZE;
     bool ready2match=false;
 
     void bfs_AhoCorasic(){
@@ -39,12 +38,12 @@ class trie{
 public:
     trie(int sz=0){
         mp.resize(256);
-        MAX=size_t(sz);
+        MAX=sz;
         SIZE=0;
         ready2match=false;
-        T=vector<vector<node> >(sz+3);
-        // for boj 10256
-        next=eos=vector<int>(sz+3);
+        T.resize(MAX+3);
+        next.resize(MAX+3);
+        eos.resize(MAX+3);
         
         // for 10256
         mp['A']=0;
@@ -58,13 +57,30 @@ public:
     }
     ~trie(){
         memset(M,0,sizeof(M));
+        T.clear();
+        next.clear();
+        eos.clear();
+        mp.clear();
     }
+    
+    void resize(int sz){
+        MAX=sz;
+        ready2match=false;
+        T.resize(MAX+3);
+        next.resize(MAX+3);
+        eos.resize(MAX+3);
+    }
+    
     void insert(string &s){
+        ready2match=false;
         int p=0;
         for(char &c:s){
             int &tmp=M[p][mp[c]];
             if(!tmp){
                 tmp=++SIZE;
+                if(SIZE>MAX){
+                    resize((MAX<<1)|1);
+                }
                 T[p].push_back(node(SIZE,c));
             }
             p=tmp;
@@ -96,3 +112,4 @@ public:
     }
 };
 }
+
