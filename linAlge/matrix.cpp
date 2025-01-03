@@ -1,8 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <ctime>
-#include <random>
-#include <thread>
 using namespace std;
 
 namespace linAlge{
@@ -213,19 +210,6 @@ public:
         mat ret(m,n);
         for(i=0;i<m;i++){
             for(j=0;j<n;j++)ret(i,j)=M[j][i];
-        }
-        return ret;
-    }
-    
-    mat naiveProduct(mat &A,mat &B){
-        const int N=A.n,K=A.m,M=B.m;
-        mat ret(N,M);
-        for(i=0;i<N;i++){
-            for(j=0;j<M;j++){
-                for(k=0;k<K;k++){
-                    ret(i,j)+=A(i,k)*B(k,j);
-                }
-            }
         }
         return ret;
     }
