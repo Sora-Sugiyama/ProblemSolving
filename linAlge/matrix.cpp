@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <random>
+#include <thread>
 using namespace std;
 
 namespace linAlge{
@@ -58,6 +61,13 @@ public:
         return ret;
     }
     
+    mat &operator+=(mat ref){
+        for(i=0;i<n;i++){
+            for(j=0;j<m;j++)M[i][j]+=ref(i,j);
+        }
+        return *this;
+    }
+    
     mat operator-(mat ref){
         mat ret(n,m);
         for(i=0;i<n;i++){
@@ -67,6 +77,7 @@ public:
         }
         return ret;
     }
+    
 private:
     mat nProduct(mat &A,mat &B){
         const int N=A.n,K=A.m,M=B.m;
@@ -100,6 +111,7 @@ private:
         }
         
         S1=A21+A22; S2=S1-A11; S3=B12-B11; S4=B22-S3;
+        
         M1=S2*S4; M2=A11*B11; M3=A12*B21; M4=(A11-A21)*(B22-B12); M5=S1*S3; M6=(A12-S2)*B22; M7=A22*(S4-B21);
         T1=M1+M2; T2=T1+M4;
         
@@ -136,15 +148,13 @@ private:
             for(j=0;j<t;j++)B21(i,j)=B(i+t,j);
             for(j=0;j<M-t;j++)B22(i,j)=B(i+t,j+t);
         }
+        
         mat C11,C12,C21,C22;
         C11=A11*B11+A12*B21;
         C12=A11*B12+A12*B22;
         C21=A21*B11+A22*B21;
         C22=A21*B12+A22*B22;
-        C11=nProduct(A11,B11)+nProduct(A12,B21);
-        C12=nProduct(A11,B12)+nProduct(A12,B22);
-        C21=nProduct(A21,B11)+nProduct(A22,B21);
-        C22=nProduct(A21,B12)+nProduct(A22,B22);
+        
         for(i=0;i<t;i++){
             for(j=0;j<t;j++)ret(i,j)=C11(i,j);
             for(j=0;j<M-t;j++)ret(i,j+t)=C12(i,j);
@@ -159,7 +169,7 @@ private:
     
 public:
     mat operator*(mat ref){
-        if(n<=5||m<=5||ref.n<=5||ref.m<=5)return nProduct(*this,ref);
+        if(n<=180||m<=180||ref.n<=180||ref.m<=180)return nProduct(*this,ref);
         if(n==m&&ref.n==ref.m&&!(n&1))return Winograd(*this,ref);
         return product(*this,ref);
     }
@@ -186,6 +196,19 @@ public:
         return *this;
     }
     
+    bool operator==(mat &ref){
+        for(i=0;i<n;i++){
+            for(j=0;j<m;j++){
+                if(M[i][j]!=ref(i,j))return false;
+            }
+        }
+        return true;
+    }
+    
+    bool operator==(vv ref){
+        return M==ref;
+    }
+    
     mat T(){
         mat ret(m,n);
         for(i=0;i<m;i++){
@@ -193,5 +216,57 @@ public:
         }
         return ret;
     }
+    
+    mat naiveProduct(mat &A,mat &B){
+        const int N=A.n,K=A.m,M=B.m;
+        mat ret(N,M);
+        for(i=0;i<N;i++){
+            for(j=0;j<M;j++){
+                for(k=0;k<K;k++){
+                    ret(i,j)+=A(i,k)*B(k,j);
+                }
+            }
+        }
+        return ret;
+    }
 };
+}
+
+using ll=long long;
+const ll mod=1e9+7;
+int N;
+auto po(auto M,ll r){
+    auto ret=M;r--;
+    while(r){
+        if(r&1)ret=ret*M%mod;
+        r>>=1;M=M*M%mod;
+    }
+    return ret;
+}
+
+random_device rd;
+mt19937 gen(rd());
+uniform_int_distribution<int>uid(1,100);
+int main(){
+    ios_base::sync_with_stdio(false);cin.tie(NULL);
+    for(int n=300;n<=2000;n+=30){
+        cout<<n<<endl;
+        linAlge::mat A(n,n);
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                A(i,j)=uid(gen);
+            }
+        }
+        linAlge::mat B,C;
+        auto s=clock();
+        B=A*A;
+        auto e=clock();
+        cout<<e-s<<" _ ";
+        s=clock();
+        C=A.naiveProduct(A,A);
+        e=clock();
+        cout<<e-s<<endl;
+        cout<<(B==C)<<endl;
+    }
+    return 0;
 }
