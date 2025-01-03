@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-namespace graph{
+namespace data_structure{
 using ll=long long;
 class disjoint_set{
     vector<int>pos;
