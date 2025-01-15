@@ -110,7 +110,7 @@ public:
         }
         
         const size_t hullsz=k-1;
-        hull.resize(k);
+        hull.resize(hullsz);
         for(size_t i=0;i<hullsz;i++){
             hullLine.push_back(line(hull[i],hull[(i+1)%hullsz]));
         }
