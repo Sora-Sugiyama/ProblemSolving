@@ -45,7 +45,7 @@ class planar{
     };
     
     vector<point>P,hull;
-    vector<line>L;
+    vector<line>L,hullLine;
     
 public:
     planar(){}
@@ -53,6 +53,7 @@ public:
         P.clear();
         L.clear();
         hull.clear();
+        hullLine.clear();
     }
     
     ll abs(point ref){
@@ -92,7 +93,7 @@ public:
         hull.resize(n<<1);
         sort(P.begin(),P.end());
         
-        int k=0;
+        size_t k=0;
         for(point &p:P){
             while(k>=2&&CCW(hull[k-2],hull[k-1],p)<=0)k--;
             hull[k++]=p;
@@ -103,7 +104,11 @@ public:
             hull[k++]=P[i-1];
         }
         
-        hull.resize(k-1);
+        const size_t hullsz=k-1;
+        hull.resize(hullsz);
+        for(size_t i=0;i<hullsz;i++){
+            hullLine.push_back(line(hull[i],hull[(i+1)%hullsz]));
+        }
     }
     
     size_t hullSize(){
@@ -119,4 +124,3 @@ public:
     }
 };
 }
-
