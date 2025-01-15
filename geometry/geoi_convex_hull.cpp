@@ -73,7 +73,7 @@ public:
     }
     
     void add_line(ll x,ll y,ll X,ll Y){
-        L.push_back(line(point(x,y),point(x,y)));
+        L.push_back(line(point(x,y),point(X,Y)));
     }
     
     void add_line(point p,point q){
