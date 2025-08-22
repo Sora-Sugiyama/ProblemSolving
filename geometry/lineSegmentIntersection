@@ -1,0 +1,80 @@
+#include "bits/stdc++.h"
+#define fi first
+#define se second
+using namespace std;
+using lf=double;
+using ll=long long;
+using ull=unsigned long long;
+using pii=pair<ll,ll>;
+using ppp=pair<pii,pii>;
+
+inline int ccw(const pii &a,const pii &b,const pii &c){
+    ll cp=(b.fi-a.fi)*(c.se-a.se)-(b.se-a.se)*(c.fi-a.fi);
+    return cp>0?1:(cp<0?-1:0);
+}
+
+bool lsi(ppp a,ppp b){
+    ll ab=ccw(a.fi,a.se,b.fi)*ccw(a.fi,a.se,b.se),ba=ccw(b.fi,b.se,a.fi)*ccw(b.fi,b.se,a.se);
+    if(ab==0&&ba==0){
+        if(a.fi>a.se)swap(a.fi,a.se);
+        if(b.fi>b.se)swap(b.fi,b.se);
+        return b.fi<=a.se&&a.fi<=b.se;
+    }
+    return ab<=0&&ba<=0;
+}
+
+inline pair<lf,lf> inter(ppp a,ppp b){
+    if(a.fi>a.se)swap(a.fi,a.se);
+    if(b.fi>b.se)swap(b.fi,b.se);
+    if(a>b)swap(a,b);
+    ll denom=(a.fi.fi-a.se.fi)*(b.fi.se-b.se.se)-(a.fi.se-a.se.se)*(b.fi.fi-b.se.fi);
+    
+    if(denom==0){
+        if(a.fi<=a.se&&a.se<=b.fi&&b.fi<=b.se){
+            if(a.fi==b.fi||a.fi==b.se)return a.fi;
+            if(a.se==b.fi||a.se==b.se)return a.se;
+        }
+        return {nanf("1"),nanf("2")};
+    }
+    
+    pair<lf,lf>ret;
+    ret.fi=((double)(a.fi.fi*a.se.se-a.fi.se*a.se.fi)*(b.fi.fi-b.se.fi)-(double)(b.fi.fi*b.se.se-b.fi.se*b.se.fi)*(a.fi.fi-a.se.fi))/denom;
+    ret.se=((double)(a.fi.fi*a.se.se-a.fi.se*a.se.fi)*(b.fi.se-b.se.se)-(double)(b.fi.fi*b.se.se-b.fi.se*b.se.fi)*(a.fi.se-a.se.se))/denom;
+    
+    return ret;
+}
+
+inline lf dist(const pair<lf,lf>&a,const pair<lf,lf>&b){
+    return (a.fi-b.fi)*(a.fi-b.fi)+(a.se-b.se)*(a.se-b.se);
+}
+int main(){
+    ios_base::sync_with_stdio(false);cin.tie(NULL);
+    int T;cin>>T;
+    while(T--){
+        int x1,y1,x2,y2;cin>>x1>>y1>>x2>>y2;
+        vector<ppp>sides({{{x1,y1},{x1,y2}},{{x1,y1},{x2,y1}},{{x2,y2},{x1,y2}},{{x2,y2},{x2,y1}}});
+        vector<pair<lf,lf> >inters;
+        
+        cin>>x1>>y1>>x2>>y2;
+        ppp ls={{x1,y1},{x2,y2}};
+        for(auto s:sides){
+            if(!lsi(s,ls))continue;
+            auto cur=inter(s,ls);
+            if(isnan(cur.fi)||isnan(cur.se)){
+                cout<<"4\n";
+                goto nextTestCase;
+            }
+            for(auto ip:inters){
+                if(dist(cur,ip)<=1e-9){
+                    goto nextSide;
+                }
+            }
+            inters.push_back(cur);
+            
+            nextSide:
+        }
+        
+        cout<<inters.size()<<"\n";
+        nextTestCase:
+    }
+}
