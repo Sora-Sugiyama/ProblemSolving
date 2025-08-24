@@ -10,7 +10,7 @@ vector<int>Manacher(string s){
     }
     const int n=(int)T.size();
     int r=0,p=0;
-    vector<int>arr(n+3),ans(s.size());
+    vector<int>arr(n+3);
     for(int i=0;i<n;i++){
         if(i<=r)arr[i]=min(arr[2*p-i],r-i);else arr[i]=0;
         while(i-arr[i]-1>=0&& i+arr[i]+1<n&&T[i-arr[i]-1]==T[i+arr[i]+1])arr[i]++;
@@ -18,7 +18,6 @@ vector<int>Manacher(string s){
             r=arr[i]+i;
             p=i;
         }
-        if(i&1)ans[i>>1]=arr[i];
     }
     return arr;
 }
