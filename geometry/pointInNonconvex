@@ -1,0 +1,52 @@
+#include "bits/stdc++.h"
+#define fi first
+#define se second
+using namespace std;
+using ll=long long;
+using pii=pair<ll,ll>;
+using ppp=pair<pii,pii>;
+
+inline int ccw(const pii &a,const pii &b,const pii &c){
+    ll cp=(b.fi-a.fi)*(c.se-a.se)-(b.se-a.se)*(c.fi-a.fi);
+    return cp>0?1:(cp<0?-1:0);
+}
+
+bool lsi(ppp a,ppp b){
+    ll ab=ccw(a.fi,a.se,b.fi)*ccw(a.fi,a.se,b.se),ba=ccw(b.fi,b.se,a.fi)*ccw(b.fi,b.se,a.se);
+    if(ab==0&&ba==0){
+        if(a.fi>a.se)swap(a.fi,a.se);
+        if(b.fi>b.se)swap(b.fi,b.se);
+        return b.fi<=a.se&&a.fi<=b.se;
+    }
+    return ab<=0&&ba<=0;
+}
+
+constexpr ll INF=2e9;
+bool pointInNonconvex(vector<pii>&hull,pii point){
+    int cnt=0;
+    const int n=(int)hull.size();
+    for(int i=0;i<n;i++){
+        pii a=hull[i],b=hull[i+1==n?0:i+1];
+        if(a>b)swap(a,b);
+        if(ccw(point,a,b)==0){
+            if(a.fi<=point.fi&&point.fi<=b.fi && min(a.se,b.se)<=point.se&&point.se<=max(a.se,b.se))return true;
+            if(a.fi==b.fi)continue;
+        }
+        if(point.fi==a.fi)continue;
+        cnt+=lsi({a,b},{point,{point.fi,INF}});
+    }
+    return cnt&1;
+}
+
+int main(){
+    ios_base::sync_with_stdio(false);cin.tie(NULL);
+    int N;cin>>N;
+    vector<pii>hull(N);
+    for(auto &p:hull)cin>>p.fi>>p.se;
+    
+    for(int i=0;i<3;i++){
+        pii p;cin>>p.fi>>p.se;
+        cout<<pointInNonconvex(hull, p)<<"\n";
+    }
+    return 0;
+}
