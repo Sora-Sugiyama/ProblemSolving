@@ -12,10 +12,12 @@ vector<int>KMP(string &T,string &P){
     vector<int>nxt=CPF(P),ans;
     const int n=(int)T.size(),m=(int)P.size();
     for(int i=0,j=0;i<n;i++){
-        if(j>=m)j=nxt[j-1];
         while(j>0&&T[i]!=P[j])j=nxt[j-1];
         if(T[i]==P[j])j++;
-        if(j==m)ans.push_back(i-m+2); // Position where P appears in T
+        if(j==m){
+            ans.push_back(i-m+2); // Position where P appears in T
+            j=nxt[j-1];
+        }
     }
     return ans;
 }
