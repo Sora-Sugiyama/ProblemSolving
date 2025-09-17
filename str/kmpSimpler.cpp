@@ -20,7 +20,6 @@ std::vector<int> patternMatching(std::string text,std::string pattern){
     const int n=(int)text.size()-1,m=(int)pattern.size()-1;
     
     char a=pattern[1];
-    text.push_back('^'); text.push_back(a);
     pattern.push_back('@');
     auto next=computeNext(pattern);
     
