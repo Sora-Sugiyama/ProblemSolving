@@ -2,7 +2,8 @@
 using namespace std;
 using ll=long long;
 
-template<class T>
+template<class T,
+ll mod>
 class mat{
     vector<vector<T> >arr;
     int n;
@@ -30,7 +31,7 @@ public:
             for(int j=0;j<n;j++){
                 tmp(i,j)=0;
                 for(int k=0;k<n;k++){
-                    tmp(i,j)=(tmp(i,j)+arr[i][k]*rhs(k,j))%1000;
+                    tmp(i,j)=(tmp(i,j)+arr[i][k]*rhs(k,j))%mod;
                 }
             }
         }
@@ -44,7 +45,7 @@ public:
             for(int j=0;j<n;j++){
                 tmp(i,j)=0;
                 for(int k=0;k<n;k++){
-                    tmp(i,j)=(tmp(i,j)+arr[i][k]*rhs(k,j))%1000;
+                    tmp(i,j)=(tmp(i,j)+arr[i][k]*rhs(k,j))%mod;
                 }
             }
         }
@@ -54,7 +55,7 @@ public:
 
 int main(){
     // You can use like
-    mat<ll> A(3);
+    mat<ll> A(3, 1000);
     A(0,0)=1;
     A(1,1)=1;
     A(2,2)=1;
