@@ -55,7 +55,7 @@ public:
 
 int main(){
     // You can use like
-    mat<ll> A(3, 1000);
+    mat<ll, 1000> A(3);
     A(0,0)=1;
     A(1,1)=1;
     A(2,2)=1;
