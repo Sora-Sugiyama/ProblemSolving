@@ -44,7 +44,7 @@ bool dfs(int u){
     return false;
 }
 
-int HopcraftKarp(const int &n, const int &m){
+int HopcroftKarp(const int &n, const int &m){
     pU.resize(n+2);
     pV.resize(m+2);
     dist.resize(n+2);
